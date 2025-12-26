@@ -1,0 +1,9 @@
+{
+  "name": "微信",
+  "description": "高度还原的微信专业版模拟应用，支持全量数据持久化、加密通讯与AI智能交互。",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
