@@ -10,9 +10,10 @@ interface MeProps {
   onOpenPay: () => void;
   onOpenProfile: () => void;
   onOpenSettings: () => void;
+  onOpenMoments: () => void;
 }
 
-const Me: React.FC<MeProps> = ({ userId, avatar, status, onOpenStatus, onOpenPay, onOpenProfile, onOpenSettings }) => {
+const Me: React.FC<MeProps> = ({ userId, avatar, status, onOpenStatus, onOpenPay, onOpenProfile, onOpenSettings, onOpenMoments }) => {
   return (
     <div className="bg-[#EDEDED] space-y-2 min-h-full pb-10">
       <div 
@@ -53,7 +54,11 @@ const Me: React.FC<MeProps> = ({ userId, avatar, status, onOpenStatus, onOpenPay
 
       <div className="bg-white divide-y divide-gray-100">
         <MeItem icon={<Box size={24} className="text-orange-500" />} label="收藏" />
-        <MeItem icon={<ImageIcon size={24} className="text-blue-600" />} label="朋友圈" />
+        <MeItem 
+          icon={<ImageIcon size={24} className="text-blue-600" />} 
+          label="朋友圈" 
+          onClick={onOpenMoments}
+        />
         <MeItem icon={<CreditCard size={24} className="text-blue-400" />} label="卡包" />
         <MeItem icon={<Smile size={24} className="text-orange-400" />} label="表情" />
       </div>
@@ -71,8 +76,8 @@ const Me: React.FC<MeProps> = ({ userId, avatar, status, onOpenStatus, onOpenPay
   );
 };
 
-const MeItem = ({ icon, label }: { icon: React.ReactNode, label: string }) => (
-  <div className="flex items-center justify-between p-4 active:bg-gray-100 cursor-pointer transition-colors">
+const MeItem = ({ icon, label, onClick }: { icon: React.ReactNode, label: string, onClick?: () => void }) => (
+  <div onClick={onClick} className="flex items-center justify-between p-4 active:bg-gray-100 cursor-pointer transition-colors">
     <div className="flex items-center gap-4">
       {icon}
       <span className="text-sm font-medium">{label}</span>

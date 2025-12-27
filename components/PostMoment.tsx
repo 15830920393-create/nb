@@ -5,13 +5,14 @@ import { Moment } from '../types';
 
 interface PostMomentProps {
   myAvatar: string;
+  userName: string;
   onBack: () => void;
   onPublish: (moment: Moment) => void;
 }
 
 const EMOJIS = ['😀', '😁', '😂', '🤣', '😃', '😄', '😅', '😆', '😉', '😊', '😋', '😎', '😍', '😘', '🥰', '😗', '😙', '😚', '☺️', '🙂', '🤗', '🤩'];
 
-const PostMoment: React.FC<PostMomentProps> = ({ myAvatar, onBack, onPublish }) => {
+const PostMoment: React.FC<PostMomentProps> = ({ myAvatar, userName, onBack, onPublish }) => {
   const [content, setContent] = useState('');
   const [images, setImages] = useState<string[]>([]);
   const [showEmoji, setShowEmoji] = useState(false);
@@ -21,7 +22,7 @@ const PostMoment: React.FC<PostMomentProps> = ({ myAvatar, onBack, onPublish }) 
     
     const newMoment: Moment = {
       id: `m-${Date.now()}`,
-      author: '微信用户',
+      author: userName || '微信用户',
       avatar: myAvatar,
       content: content.trim(),
       images: images,

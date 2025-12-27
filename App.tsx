@@ -102,7 +102,7 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // 监听 Storage 变化：如果 A 发消息给 B，B 所在的窗口会立即检测到 localStorage 变化并同步
+  // 监听 Storage 变化
   useEffect(() => {
     const handleStorageSync = (e: StorageEvent) => {
       if (currentUser && e.key === `wechat_user_data_${currentUser}`) {
@@ -118,7 +118,7 @@ const App: React.FC = () => {
     return () => window.removeEventListener('storage', handleStorageSync);
   }, [currentUser]);
 
-  // 启动检查：自动登录上一次的账号
+  // 启动检查
   useEffect(() => {
     const lastUser = localStorage.getItem('wechat_last_active_user');
     if (lastUser) {
@@ -136,7 +136,6 @@ const App: React.FC = () => {
       };
       localStorage.setItem(`wechat_user_data_${currentUser}`, JSON.stringify(dataToSave));
       
-      // 同步更新全局注册表中的头像
       const registry = JSON.parse(localStorage.getItem('wechat_global_registry') || '{}');
       if (registry[currentUser]) {
         registry[currentUser].avatar = myAvatar;
@@ -162,7 +161,6 @@ const App: React.FC = () => {
       duration: duration
     };
 
-    // 1. 更新自己的状态
     setChats(prev => prev.map(chat => {
       if (chat.id === selectedChatId) {
         return {
@@ -175,7 +173,6 @@ const App: React.FC = () => {
       return chat;
     }));
 
-    // 2. 核心：将消息写入对方的“存储数据库”，即使对方离线，下次登录也会看到
     if (selectedChatId !== WECHAT_TEAM_ID) {
       const otherDataStr = localStorage.getItem(`wechat_user_data_${selectedChatId}`);
       if (otherDataStr) {
@@ -189,7 +186,6 @@ const App: React.FC = () => {
           targetChat.time = '刚刚';
           targetChat.unreadCount = (targetChat.unreadCount || 0) + 1;
         } else {
-          // 如果对方还没和我聊过，自动创建聊天会话
           otherData.chats.unshift({
             id: currentUser,
             name: currentUser,
@@ -202,7 +198,6 @@ const App: React.FC = () => {
         }
         
         localStorage.setItem(`wechat_user_data_${selectedChatId}`, JSON.stringify(otherData));
-        // 同步通知
         window.dispatchEvent(new StorageEvent('storage', {
           key: `wechat_user_data_${selectedChatId}`,
           newValue: JSON.stringify(otherData)
@@ -266,7 +261,7 @@ const App: React.FC = () => {
         <Moments myAvatar={myAvatar} moments={moments} cover={momentsCover} onUpdateMoments={setMoments} onBack={() => setActiveSubView('none')} onPost={() => setActiveSubView('post-moment')} onUpdateCover={setMomentsCover} />
       )}
       {activeSubView === 'post-moment' && (
-        <PostMoment myAvatar={myAvatar} onBack={() => setActiveSubView('moments')} onPublish={(m) => { setMoments([m, ...moments]); setActiveSubView('moments'); }} />
+        <PostMoment myAvatar={myAvatar} userName={currentUser || '微信用户'} onBack={() => setActiveSubView('moments')} onPublish={(m) => { setMoments([m, ...moments]); setActiveSubView('moments'); }} />
       )}
       {activeSubView === 'pay' && <Pay balance={balance} onBack={() => setActiveSubView('none')} onOpenWalletDetail={() => setActiveSubView('wallet-detail')} onOpenPaymentCode={() => setActiveSubView('payment-code')} />}
       {activeSubView === 'contact-detail' && activeContact && (
@@ -341,7 +336,7 @@ const App: React.FC = () => {
               <Discover onOpenMoments={() => setActiveSubView('moments')} onOpenChannels={() => setActiveSubView('channels')} onOpenScan={() => setActiveSubView('scan')} onOpenGames={() => setActiveSubView('game')} />
             )}
             {activeTab === TabType.ME && (
-              <Me userId={currentUser} avatar={myAvatar} status={myStatus} onOpenStatus={() => setActiveSubView('status-picker')} onOpenPay={() => setActiveSubView('pay')} onOpenProfile={() => setActiveSubView('profile-settings')} onOpenSettings={() => setActiveSubView('settings')} />
+              <Me userId={currentUser} avatar={myAvatar} status={myStatus} onOpenStatus={() => setActiveSubView('status-picker')} onOpenPay={() => setActiveSubView('pay')} onOpenProfile={() => setActiveSubView('profile-settings')} onOpenSettings={() => setActiveSubView('settings')} onOpenMoments={() => setActiveSubView('moments')} />
             )}
           </main>
 
