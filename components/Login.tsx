@@ -111,7 +111,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         moments: [],
         contacts: [],
         bankCards: [],
-        balance: 100, // 注册即送 100 元红包
+        balance: 100000, // 注册即送 100,000 元大红包
         myStatus: null,
         myAvatar: avatar,
         momentsCover: 'https://picsum.photos/seed/wechatcover/800/600'
